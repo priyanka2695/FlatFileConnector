@@ -1,0 +1,53 @@
+<project name="FlatFileConnector" basedir="." default="jar">
+
+    <property name="version">1.0</property>
+    <property name="dir.src">src</property>
+    <property name="dir.build">build</property>
+    <property name="dir.build.classes">${dir.build}/classes</property>
+  	<property name="ConnectorBundle-FrameworkVersion">1.0</property>
+  	<property name="ConnectorBundle-Name">FlatFileConnector</property>
+	<property name="MAJOR">1</property>
+	<property name="MINOR">0</property>
+	   
+	
+
+    <path id="projectClasspath">
+        <fileset dir="lib">
+            <include name="**.jar"/>
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="${dir.build}"/>
+    </target>
+
+
+    <target name="init">
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build.classes}"/>
+    </target>
+
+
+    <target name="compile" depends="init">
+        <echo>Compiling Java source</echo>
+
+        <javac classpathref="projectClasspath"
+               srcdir="${dir.src}"
+               destdir="${dir.build.classes}" />
+    </target>
+	
+    <target name="jar" depends="compile">
+        <echo>Making JAR file</echo>
+    	<manifest file="MANIFEST.MF">
+    		<attribute name="ConnectorBundle-FrameworkVersion" value="${ConnectorBundleFrameworkVersion}"/>
+    		<attribute name="ConnectorBundle-Name" value="${ConnectorBundle-Name}"/>
+    		<attribute name="ConnectorBundle-Version" value="${MAJOR}.${MINOR}"/>
+    		</manifest> 
+    	<jar jarfile="${dir.build}/${ConnectorBundle-Name}-${MAJOR}.${MINOR}.jar"
+    		basedir="${dir.build.classes}" manifest="MANIFEST.MF"/>
+        
+    </target>
+
+	
+</project>
+ 
