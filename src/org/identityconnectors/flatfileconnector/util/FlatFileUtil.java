@@ -22,29 +22,15 @@ import org.identityconnectors.framework.common.objects.ConnectorObjectBuilder;
 import org.identityconnectors.framework.common.objects.Uid;
 
 
-/**
- * The class FlatFileUtil contains utility methods such as createUid etc. 
- * 
- * @author manju
- */
+
 public final class FlatFileUtil {
-        public static String ERROR_MESSAGE = "account already exists";
-        public static String LOOKUP_RECON_STRING = "Lookup.FF.UM.LookupRecon";
-        public static String LOOKUP_RECON = "LOOKUP_RECON";
-        public static String Normal_RECON = "Normal_RECON";
-        public static String Incremental_RECON = "Incremental_RECON";
-        public static String LatestToken="LatestToken";
-        public static String ROLES = "Roles";
-        public static String salutation = "salutation";
-        public static String LOOKUP_RECON_FILE = "/home/mambuga/misc/roles.txt";
+        public static String ERROR_MESSAGE = "account already exists"; 
         public static String AccountId="AccountId";
         public static String Status = "__ENABLE__";
         public static String FirstName="FirstName";
         public static String lastName="lastName";
         public static String email="email";
-        public static String Role="Role";
-        public static String Salutation="Salutation";
-        public static String Incremental_Recon_Attribute="LastModified";
+        
 	/**
 	 * Creates and retunrs a Uid with the input value
 	 * @param value
@@ -213,105 +199,6 @@ public final class FlatFileUtil {
 		return cb;
 	}
 	
-	public static StringBuffer checkAndGetUpdateAttributes(Uid arg1,Set<Attribute> arg2,File targetFile){
-		//boolean updatedAttributes = false;
-                System.out.println("Inside checkAndGetUpdateAttributes...");
-                
-		boolean attributeFound = false;
-		BufferedReader reader = FlatFileUtil.getReader(targetFile);
-		String line = null;
-		StringBuffer sb = new StringBuffer();
-		try {
-			while((line = reader.readLine()) != null){
-				attributeFound = false;
-				Scanner sc = new Scanner(line).useDelimiter(";");
-				while(sc.hasNext()){
-					String nextString = sc.next();
-					String[] strArray = nextString.split(":");
-					if(strArray[0].equals("AccountId") && strArray[1].equalsIgnoreCase(arg1.getUidValue())){					
-						attributeFound = true;
-						break;
-					}
-				}
-				if(!attributeFound){
-					sb.append(line);
-					sb.append("\n");
-				}else{
-					StringBuffer updatedLine = new StringBuffer();
-				    
-					for(Attribute attr:arg2){
-					    System.out.println("line = "+line);
-					    System.out.println("attr.getValue() = "+attr.getValue());
-                                            //we will enter here if line does not contains the replace attr value and name
-                                            String[] strArray = null;
-                                            //if(line.contains(attr.getName())){
-                                                strArray = line.split(attr.getName());
-                                            //}
-                                            
-                                            if(attr.getName().equalsIgnoreCase(FlatFileUtil.Role))
-                                            {
-                                                System.out.println("Updating role...");
-                                                if(strArray[0] != null)
-                                                    line = strArray[0];
-                                                updatedLine.append(attr.getName());
-                                                updatedLine.append(":");
-                                                for(int i =0;i<attr.getValue().size();i++){
-                                                    updatedLine.append(attr.getValue().get(i));
-                                                    updatedLine.append(",");
-                                                }
-                                            }else{
-                                                System.out.println("Updating "+attr.getName());
-                                                if(strArray.length > 1 && strArray[1] != null){
-                                                    line = "";
-                                                    updatedLine.append(strArray[0]);
-                                                    updatedLine.append(attr.getName());
-                                                    updatedLine.append(":");
-                                                    updatedLine.append(attr.getValue().get(0));
-                                                    updatedLine.append(";");
-                                                    Scanner sc1 = new Scanner(strArray[1]).useDelimiter(";");
-                                                    int i = 0;
-                                                    while(sc1.hasNext()){
-                                                        if(i == 0){
-                                                            sc1.next();
-                                                            i++;
-                                                        }else{
-                                                            updatedLine.append(sc1.next());                                                            
-                                                            updatedLine.append(";");
-                                                        }
-                                                    }
-                                                    //updatedLine.append(strArray[1]);                                                    
-                                                }else{
-                                                    System.out.println("Updating to value "+attr.getValue().get(0));
-                                                    updatedLine.append(attr.getName());
-                                                    updatedLine.append(":");
-                                                    updatedLine.append(attr.getValue().get(0));
-                                                    updatedLine.append(";");
-                                                }
-                                            }
-                                     //       if(!line.contains(attr.getValue().toString()) && !line.contains(attr.getName().toString())){
-                                      //          updatedLine.append(attr.getName()).append(":").append(attr.getValue().get(attr.getValue().size()-1)).append(",");
-                                       //     }//we come here if we have the attr name already in the line
-                                       //     else if(!line.contains(attr.getValue().toString()) && line.contains(attr.getName().toString())){
-                                       //         updatedLine.append(attr.getValue().get(attr.getValue().size()-1)).append(",");
-                                       //     }
-					}
-                                    System.out.println("line = "+line);
-				    System.out.println("updatedLine = "+updatedLine);
-                                        sb.append(line);
-					sb.append(updatedLine);
-					sb.append("\n");
-				}
-			}
-		} catch (IOException e) {			
-			e.printStackTrace();
-			throw new RuntimeException("Unable to read from file "+targetFile.getAbsolutePath());
-		}
-		System.out.println("Name: "+arg1.getName());
-		System.out.println("UId value: "+arg1.getUidValue());
-		System.out.println("value: "+arg1.getValue());
-		FlatFileUtil.closeReader(reader);
-		return sb;
-	}
 	
 	public static void writeUpdatedContent(StringBuffer updatedContent,File file){
 		BufferedWriter writer = FlatFileUtil.getWriter(file,false);
