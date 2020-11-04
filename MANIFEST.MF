@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.10.8
-Created-By: 14.0.2+12-46 (Oracle Corporation)
-ConnectorBundle-FrameworkVersion: ${ConnectorBundleFrameworkVersion}
-ConnectorBundle-Name: FlatFileConnector
+Created-By: 1.8.0_271-b09 (Oracle Corporation)
+ConnectorBundle-FrameworkVersion: 1.0
+ConnectorBundle-Name: org.identityconnectors.flatfile
 ConnectorBundle-Version: 1.0
 
